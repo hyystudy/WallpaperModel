@@ -3,6 +3,8 @@ package com.hyy.jccy.wallpaperdemo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,15 +15,31 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.hyy.jccy.wallpaperdemo.fragment.AppFragment;
+import com.hyy.jccy.wallpaperdemo.fragment.FavoriteFragment;
+import com.hyy.jccy.wallpaperdemo.fragment.HistoryFragment;
+import com.hyy.jccy.wallpaperdemo.fragment.LocalFragment;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Menu mNavMenu;
+    private ArrayList<String> fragments;
+    private AppFragment mAppFragment;
+    private FavoriteFragment mFavoriteFragment;
+    private HistoryFragment mHistoryFragment;
+    private LocalFragment mLocalFragment;
+    private Toolbar mToolbar;
+    private TabLayout mTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -34,12 +52,21 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mNavMenu = navigationView.getMenu();
+        mTabs = (TabLayout) findViewById(R.id.tabs);
+
+        fragments = new ArrayList<>();
+        mAppFragment =  AppFragment.newInstance(mTabs);
+        getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mAppFragment,"App").commit();
+        addFragmentToList("App");
+        mNavMenu.getItem(0).setChecked(true);
+
     }
 
     @Override
@@ -47,8 +74,48 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (fragments.size() >= 2){
+            turnToFragmentByTag(fragments.get(fragments.size() - 2));
+            fragments.remove(fragments.size() - 2);
+        }else {
             super.onBackPressed();
+        }
+    }
+
+    private void turnToFragmentByTag(String tag) {
+        switch (tag){
+            case "App":
+                if (mAppFragment == null){
+                    mAppFragment = AppFragment.newInstance(mTabs);
+                }
+                mTabs.setVisibility(View.VISIBLE);
+                mNavMenu.getItem(0).setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mAppFragment,"App").commit();
+                break;
+            case "Favorite":
+                if (mFavoriteFragment == null) {
+                    mFavoriteFragment = new FavoriteFragment();
+                }
+                mTabs.setVisibility(View.GONE);
+                mNavMenu.getItem(1).setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mFavoriteFragment,"Favorite").commit();
+                break;
+            case "History":
+                if (mHistoryFragment == null){
+                    mHistoryFragment = new HistoryFragment();
+                }
+                mTabs.setVisibility(View.GONE);
+                mNavMenu.getItem(2).setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mHistoryFragment,"History").commit();
+                break;
+            case "Local":
+                if (mLocalFragment == null){
+                    mLocalFragment = new LocalFragment();
+                }
+                mTabs.setVisibility(View.GONE);
+                mNavMenu.getItem(3).setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mLocalFragment,"Local").commit();
+                break;
         }
     }
 
@@ -80,22 +147,38 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+       switch (id){
+           case R.id.nav_app:
+                turnToFragmentByTag("App");
+               addFragmentToList("App");
+               break;
+           case R.id.nav_favorite:
+               //mFragmentTransaction.
+               turnToFragmentByTag("Favorite");
+               addFragmentToList("Favorite");
+               break;
+           case R.id.nav_history:
+               turnToFragmentByTag("History");
+               addFragmentToList("History");
+               break;
+           case R.id.nav_local:
+               turnToFragmentByTag("Local");
+               addFragmentToList("Local");
+               break;
+       }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void addFragmentToList(String app) {
+        if (!fragments.contains(app)){
+            fragments.add(app);
+        }else {
+            fragments.remove(fragments.indexOf(app));
+            fragments.add(app);
+        }
+        Log.e("xxxx",fragments.toString());
     }
 }
