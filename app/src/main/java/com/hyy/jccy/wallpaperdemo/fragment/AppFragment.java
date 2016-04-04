@@ -42,7 +42,7 @@ public class AppFragment extends android.support.v4.app.Fragment {
     private void initView(View view) {
         mViewpager = (ViewPager) view.findViewById(R.id.viewpager);
         if (mViewpager.getAdapter() == null){
-            mAppFragmentAdapter = new AppFragmentAdapter(getActivity().getSupportFragmentManager());
+            mAppFragmentAdapter = new AppFragmentAdapter(getChildFragmentManager());
             mViewpager.setAdapter(mAppFragmentAdapter);
             sTabs.setupWithViewPager(mViewpager);
         }
