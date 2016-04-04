@@ -3,6 +3,7 @@ package com.hyy.jccy.wallpaperdemo.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.hyy.jccy.wallpaperdemo.fragment.subfragment.HotWallpaperFragment;
 import com.hyy.jccy.wallpaperdemo.fragment.subfragment.LatestWallpaperFragment;
@@ -19,6 +20,7 @@ public class AppFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Log.e("xxx","getItem");
         if (position == 0){
             return new LatestWallpaperFragment();
         }
@@ -27,6 +29,7 @@ public class AppFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
+        Log.e("xxx","getCount");
         return 2;
     }
 

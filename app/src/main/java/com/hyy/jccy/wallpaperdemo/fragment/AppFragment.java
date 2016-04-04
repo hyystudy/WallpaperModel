@@ -18,6 +18,7 @@ import com.hyy.jccy.wallpaperdemo.adapter.AppFragmentAdapter;
 public class AppFragment extends android.support.v4.app.Fragment {
     private static TabLayout sTabs;
     private ViewPager mViewpager;
+    private AppFragmentAdapter mAppFragmentAdapter;
 
     public static AppFragment newInstance(TabLayout tabLayout){
         AppFragment appFragment = new AppFragment();
@@ -33,15 +34,18 @@ public class AppFragment extends android.support.v4.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e("xxxx","onCreateView");
         View view = inflater.inflate(R.layout.fragment_app_layout, null);
         return view;
     }
 
     private void initView(View view) {
         mViewpager = (ViewPager) view.findViewById(R.id.viewpager);
-        AppFragmentAdapter appFragmentAdapter = new AppFragmentAdapter(getFragmentManager());
-        mViewpager.setAdapter(appFragmentAdapter);
-        sTabs.setupWithViewPager(mViewpager);
+        if (mViewpager.getAdapter() == null){
+            mAppFragmentAdapter = new AppFragmentAdapter(getActivity().getSupportFragmentManager());
+            mViewpager.setAdapter(mAppFragmentAdapter);
+            sTabs.setupWithViewPager(mViewpager);
+        }
     }
 
     @Override
