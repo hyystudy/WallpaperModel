@@ -24,7 +24,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static final String TOOLBAR_TITLE_APP = "App";
+    private static final String TOOLBAR_TITLE_FAVORITE = "Favorite";
+    private static final String TOOLBAR_TITLE_HISTORY = "History";
+    private static final String TOOLBAR_TITLE_LOCAL = "Local";
     private Menu mNavMenu;
     private ArrayList<String> fragments;
     private AppFragment mAppFragment;
@@ -62,8 +65,9 @@ public class MainActivity extends AppCompatActivity
         mTabs = (TabLayout) findViewById(R.id.tabs);
 
         fragments = new ArrayList<>();
-        mAppFragment =  AppFragment.newInstance(mTabs);
-        getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mAppFragment,"App").commit();
+      /*  mAppFragment =  AppFragment.newInstance(mTabs);
+        getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mAppFragment,"App").commit();*/
+        turnToFragmentByTag(TOOLBAR_TITLE_APP);
         addFragmentToList("App");
         mNavMenu.getItem(0).setChecked(true);
 
@@ -83,38 +87,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void turnToFragmentByTag(String tag) {
+        getSupportActionBar().setTitle(tag);
         switch (tag){
-            case "App":
+            case TOOLBAR_TITLE_APP:
                 if (mAppFragment == null){
                     mAppFragment = AppFragment.newInstance(mTabs);
                 }
                 mTabs.setVisibility(View.VISIBLE);
                 mNavMenu.getItem(0).setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mAppFragment,"App").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mAppFragment,
+                        TOOLBAR_TITLE_APP).commit();
                 break;
-            case "Favorite":
+            case TOOLBAR_TITLE_FAVORITE:
                 if (mFavoriteFragment == null) {
                     mFavoriteFragment = new FavoriteFragment();
                 }
                 mTabs.setVisibility(View.GONE);
                 mNavMenu.getItem(1).setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mFavoriteFragment,"Favorite").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mFavoriteFragment,
+                        TOOLBAR_TITLE_FAVORITE).commit();
                 break;
-            case "History":
+            case TOOLBAR_TITLE_HISTORY:
                 if (mHistoryFragment == null){
                     mHistoryFragment = new HistoryFragment();
                 }
                 mTabs.setVisibility(View.GONE);
                 mNavMenu.getItem(2).setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mHistoryFragment,"History").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mHistoryFragment,
+                        TOOLBAR_TITLE_HISTORY).commit();
                 break;
-            case "Local":
+            case TOOLBAR_TITLE_LOCAL:
                 if (mLocalFragment == null){
                     mLocalFragment = new LocalFragment();
                 }
                 mTabs.setVisibility(View.GONE);
                 mNavMenu.getItem(3).setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mLocalFragment,"Local").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.root_view,mLocalFragment,
+                        TOOLBAR_TITLE_LOCAL).commit();
                 break;
         }
     }
@@ -147,25 +156,25 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-       switch (id){
-           case R.id.nav_app:
-                turnToFragmentByTag("App");
-               addFragmentToList("App");
-               break;
-           case R.id.nav_favorite:
-               //mFragmentTransaction.
-               turnToFragmentByTag("Favorite");
-               addFragmentToList("Favorite");
-               break;
-           case R.id.nav_history:
-               turnToFragmentByTag("History");
-               addFragmentToList("History");
-               break;
-           case R.id.nav_local:
-               turnToFragmentByTag("Local");
-               addFragmentToList("Local");
-               break;
-       }
+        switch (id){
+            case R.id.nav_app:
+                turnToFragmentByTag(TOOLBAR_TITLE_APP);
+                addFragmentToList(TOOLBAR_TITLE_APP);
+                break;
+            case R.id.nav_favorite:
+                //mFragmentTransaction.
+                turnToFragmentByTag(TOOLBAR_TITLE_FAVORITE);
+                addFragmentToList(TOOLBAR_TITLE_FAVORITE);
+                break;
+            case R.id.nav_history:
+                turnToFragmentByTag(TOOLBAR_TITLE_HISTORY);
+                addFragmentToList(TOOLBAR_TITLE_HISTORY);
+                break;
+            case R.id.nav_local:
+                turnToFragmentByTag(TOOLBAR_TITLE_LOCAL);
+                addFragmentToList(TOOLBAR_TITLE_LOCAL);
+                break;
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
